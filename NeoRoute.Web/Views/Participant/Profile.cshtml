@@ -1,0 +1,86 @@
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="page-hero">
+    <h1><i class="bi bi-person-circle me-2"></i>My Profile</h1>
+    <p class="lead mb-0">View and update your RaceDay account details.</p>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+        <div id="profileLoading" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <form id="profileForm" method="post" asp-action="Profile" enctype="multipart/form-data" style="display:none;">
+            <div class="row">
+                <div class="col-md-3 text-center mb-3">
+                    <img id="profileImg" src="https://via.placeholder.com/120" class="rounded-circle mb-2" width="120" height="120" alt="Profile" style="object-fit:cover;" />
+                    <input type="file" name="profilePicture" class="form-control form-control-sm" accept="image/*" />
+                    <div class="form-text">Max 5 MB</div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">First Name</label>
+                            <input name="firstName" id="firstName" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Last Name</label>
+                            <input name="lastName" id="lastName" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input id="email" class="form-control" readonly />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Age</label>
+                            <input type="number" name="age" id="age" class="form-control" min="1" max="120" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" id="gender" class="form-select">
+                                <option value="">—</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-raceday"><i class="bi bi-check-lg me-1"></i> Save Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    (function () {
+        const json = @Html.Raw(ViewBag.ProfileJson ?? "{}");
+        document.getElementById('profileLoading').style.display = 'none';
+        document.getElementById('profileForm').style.display = 'block';
+        if (json && json.firstName) {
+            document.getElementById('firstName').value = json.firstName || '';
+            document.getElementById('lastName').value = json.lastName || '';
+            document.getElementById('email').value = json.email || '';
+            document.getElementById('age').value = json.age || '';
+            document.getElementById('gender').value = json.gender || '';
+            if (json.profilePictureUrl) {
+                document.getElementById('profileImg').src = json.profilePictureUrl;
+            }
+        }
+    })();
+</script>
+}

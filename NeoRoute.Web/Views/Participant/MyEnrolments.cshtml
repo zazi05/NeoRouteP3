@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "My Enrolments";
+}
+<div class="page-hero">
+    <h1><i class="bi bi-ticket-perforated me-2"></i>My Enrolments</h1>
+    <p class="lead mb-0">Races you are signed up for.</p>
+</div>
+<div id="list">
+    <p class="text-muted loading-pulse">Loading...</p>
+</div>
+<script>
+    const data = @Html.Raw(ViewBag.EnrolmentsJson ?? "[]");
+    const el = document.getElementById("list");
+    function statusBadge(status) {
+        const s = (status || "Pending").toLowerCase();
+        const cls = "badge-status-" + s;
+        return `<span class="badge ${cls}">${status || "Pending"}</span>`;
+    }
+    if (Array.isArray(data) && data.length) {
+        el.innerHTML = `<div class="table-responsive"><table class="table table-hover align-middle">
+            <thead><tr><th>Event</th><th>Category</th><th>Registered</th><th>Status</th></tr></thead>
+            <tbody>
+            ${data.map(e => `<tr>
+                <td>${e.eventName || "—"}</td>
+                <td>${e.categoryName || "—"}</td>
+                <td>${e.registrationDate ? new Date(e.registrationDate).toLocaleDateString() : "—"}</td>
+                <td>${statusBadge(e.status)}</td>
+            </tr>`).join("")}
+            </tbody></table></div>`;
+    } else {
+        el.innerHTML = `<div class="empty-state card p-4 text-center"><i class="bi bi-ticket-perforated display-4 text-muted"></i><h5 class="mt-2">No enrolments yet</h5><p class="mb-0 text-muted">Browse events on the home page and enrol when ready.</p></div>`;
+    }
+</script>
