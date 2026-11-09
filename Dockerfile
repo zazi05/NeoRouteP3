@@ -1,0 +1,21 @@
+# Multi-stage Dockerfile for NeoRoute.Web (MVC front-end)
+# The API is expected to run separately (or via docker-compose).
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 8080
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY NeoRoute.Web/NeoRoute.Web.csproj NeoRoute.Web/
+RUN dotnet restore NeoRoute.Web/NeoRoute.Web.csproj
+COPY NeoRoute.Web/ NeoRoute.Web/
+WORKDIR /src/NeoRoute.Web
+RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENTRYPOINT ["dotnet", "NeoRoute.Web.dll"]
