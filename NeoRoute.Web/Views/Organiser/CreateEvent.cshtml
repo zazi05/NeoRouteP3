@@ -1,0 +1,62 @@
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<div class="page-hero">
+    <h1><i class="bi bi-plus-circle me-2"></i>Create New Event</h1>
+    <p class="lead mb-0">Fill in the details below to publish a new race.</p>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+        <form method="post" asp-action="CreateEvent" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Event Name</label>
+                <input name="eventName" class="form-control" required placeholder="e.g. Cape Town 10K" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" rows="3" placeholder="Tell runners what to expect..."></textarea>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Date</label>
+                    <input type="datetime-local" name="eventDate" class="form-control" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Location</label>
+                    <input name="location" class="form-control" required placeholder="e.g. Green Point Stadium" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Distance</label>
+                    <input name="distance" class="form-control" required placeholder="10 km" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Event Type</label>
+                    <select name="eventType" class="form-select">
+                        <option value="run">Run</option>
+                        <option value="walk">Walk</option>
+                        <option value="cycle">Cycle</option>
+                        <option value="trail">Trail Run</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Event Banner Image</label>
+                <input type="file" name="banner" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp" />
+                <div class="form-text">Optional. Max 5 MB. JPG, PNG, GIF or WebP.</div>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-raceday"><i class="bi bi-check-lg me-1"></i> Create Event</button>
+                <a asp-action="Events" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

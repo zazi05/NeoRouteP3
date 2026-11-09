@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "Results";
+}
+<div class="page-hero">
+    <h1><i class="bi bi-flag me-2"></i>Results</h1>
+    <p class="lead mb-0">Enter and manage race results.</p>
+</div>
+<div id="list" class="list-group">
+    <p class="text-muted loading-pulse">Loading results...</p>
+</div>
+<script>
+    const data = @Html.Raw(ViewBag.ResultsJson ?? "[]");
+    const el = document.getElementById("list");
+    if (Array.isArray(data) && data.length) {
+        el.innerHTML = data.map(e => `
+            <div class="list-group-item">
+                <pre class="mb-0 small">${JSON.stringify(e, null, 2)}</pre>
+            </div>`).join("");
+    } else {
+        el.innerHTML = `<div class="empty-state card"><i class="bi bi-flag"></i><h5>No results yet</h5><p class="mb-0">Results will appear here once entered.</p></div>`;
+    }
+</script>
